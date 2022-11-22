@@ -12,6 +12,18 @@ typedef struct neural_network{ //Using mean squared error
 } NeuralNetwork;
 
 
+NeuralNetwork *create_neural_network(ArrayList layers, size_t output_size, double learning_rate);
+double get_loss(double *prediction, double *expected, size_t size);
+double *forward_propagate(double *input);
+double ***back_propagate_weights(NeuralNetwork *neural_network, double *prediction, double *expected);
+double **back_propagate_biases(NeuralNetwork *neural_network, double *prediction, double *expected);
+void train_neural_network(NeuralNetwork *neural_network, double **training_inputs, double **training_expected, double **validation_inputs, double **validation_expected, size_t training_size, size_t validation_size, size_t iterations, size_t mini_batch_size);
+void test_neural_network(double **testing_inputs, double **expected, size_t size);
+void print_model_architecture(NeuralNetwork *neural_network);
+double **make_predictions(double **inputs, size_t size);
+void destroy_neural_network(NeuralNetwork *neural_network);
+
+
 NeuralNetwork *create_neural_network(ArrayList layers, size_t output_size, double learning_rate){
     NeuralNetwork *new_neural_network = malloc(sizeof(NeuralNetwork));
     new_neural_network->layers = layers;
@@ -88,8 +100,6 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
             bias_gradients[i] = back_propagate_biases(neural_network, forward_propagate(training_inputs[row_to_use]), training_expected[row_to_use]);
         }
 
-        
-
         for(size_t layer = 0; layer < neural_network->layers.length; ++layer){
             for(size_t perceptron = 0; perceptron < neural_network->layers.layers[layer].num_perceptrons; ++perceptron){
                 for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron].num_weights; ++current_weight){
@@ -152,4 +162,9 @@ double **make_predictions(double **inputs, size_t size){
         results[i] = forward_propagate(inputs[i]);
     }
     return results;
+}
+
+void destroy_neural_network(NeuralNetwork *neural_network){
+    destroy_al(&(neural_network->layers));
+    free(neural_network);
 }
