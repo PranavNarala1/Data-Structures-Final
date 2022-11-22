@@ -25,15 +25,15 @@ Layer *create_layer(size_t num_perceptrons, ActivationFunction activation_functi
 }
 
 double *get_layer_output(Layer *layer, double *input){ //look for memory leaks
-    double output[layer->num_perceptrons];
-    for(int i = 0; i < num_perceptrons; ++i)
+    double *output = malloc(sizeof(double) * layer->num_perceptrons);
+    for(int i = 0; i < layer->num_perceptrons; ++i)
         output[i] = get_output(layer->perceptrons[i], input);
     
     return output;
 }
 
 void print_layer(Layer *layer){
-    printf("Dense layer with %d perceptrons and ", layer->num_perceptrons);
+    printf("Dense layer with %zu perceptrons and ", layer->num_perceptrons);
     if(layer->activation_function == IDENTITY)
         puts("identity activation function.");
     if(layer->activation_function == RELU)

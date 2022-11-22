@@ -33,7 +33,7 @@ void destroy_al(ArrayList *listPtr){
 
 void print_al(ArrayList list){
     for(size_t i = 0; i < list.length; ++i){
-        print_layer(list.layers[i]);
+        print_layer(&(list.layers[i]));
     }
 }
 
