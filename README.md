@@ -7,7 +7,7 @@ For our project, are planning on implementing an artificial neural network (ANN)
 
  
 
-Background Information Links:
+Referenced Information:
 
 https://towardsdatascience.com/introduction-to-neural-networks-advantages-and-applications-96851bd1a207
 
