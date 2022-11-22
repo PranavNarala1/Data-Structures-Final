@@ -13,7 +13,7 @@ typedef struct arraylist{
 ArrayList *create_al();
 void destroy_al(ArrayList *listPtr);
 void print_al(ArrayList list);
-void append_al (Layer value, ArrayList *listPtr);
+void append_al (Layer layer, ArrayList *listPtr);
 void resizeiffull(ArrayList *listPtr);
 //delete and insert functions are not needed for this use case
 
@@ -37,9 +37,9 @@ void print_al(ArrayList list){
     }
 }
 
-void append_al (Layer value, ArrayList *listPtr){
+void append_al (Layer layer, ArrayList *listPtr){
     resizeiffull(listPtr);
-    listPtr->layers[listPtr->length] = value;
+    listPtr->layers[listPtr->length] = layer;
     listPtr->length++;
 }
 
