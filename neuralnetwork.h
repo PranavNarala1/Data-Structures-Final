@@ -74,8 +74,50 @@ double **back_propagate_biases(NeuralNetwork *neural_network, double *prediction
 
     return bias_gradient;
 } //Gets bias gradient for each layer for a single training example
-void train_neural_network(double **training_inputs, double **training_expected, double **validation_inputs, double **validation_expected, size_t iterations, size_t mini_batch_size, size_t evaluation_frequency){
+
+void train_neural_network(NeuralNetwork *neural_network, double **training_inputs, double **training_expected, double **validation_inputs, double **validation_expected, size_t training_size, size_t validation_size, size_t iterations, size_t mini_batch_size){
+    double ****weights_gradients = malloc((sizeof(double**) * neural_network->layers.length) * mini_batch_size);
+    double ***bias_gradients = malloc((sizeof(double*) * neural_network->layers.length) * mini_batch_size);
     
+    //do this for the amount of iterations there are
+    for(size_t iteration = 0; iteration < iterations; ++iteration){
+
+        for(size_t i = 0; i < mini_batch_size; ++i){
+            size_t row_to_use = rand() % training_size;
+            weights_gradients[i] = back_propagate_weights(neural_network, forward_propagate(training_inputs[row_to_use]), training_expected[row_to_use]);
+            bias_gradients[i] = back_propagate_biases(neural_network, forward_propagate(training_inputs[row_to_use]), training_expected[row_to_use]);
+        }
+
+        
+
+        for(size_t layer = 0; layer < neural_network->layers.length; ++layer){
+            for(size_t perceptron = 0; perceptron < neural_network->layers.layers[layer].num_perceptrons; ++perceptron){
+                for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron].num_weights; ++current_weight){
+                    double average = 0;
+                    for(size_t i = 0; i < mini_batch_size; ++i){
+                        average += weights_gradients[i][layer][perceptron][current_weight];
+                    }
+                    average /= mini_batch_size;
+                    neural_network->layers.layers[layer].perceptrons[perceptron]->weights[current_weight] -= learning_rate * average;
+
+                }
+            }
+        }
+
+        for(size_t layer = 0; layer < neural_network->layers.length; ++layer){
+            for(size_t perceptron = 0; perceptron < neural_network->layers.layers[layer].num_perceptrons; ++perceptron){
+                    double average = 0;
+                    for(size_t i = 0; i < mini_batch_size; ++i){
+                        average += bias_gradients[i][layer][perceptron];
+                    }
+                    average /= mini_batch_size;
+                    neural_network->layers.layers[layer].perceptrons[perceptron]->bias -= learning_rate * average;
+            }
+        }
+
+
+        test_neural_network(validation_inputs, validation_expected, validation_size);
+    }
 } //prints out accuracy after each evaluation_frequency iterations
 
 void test_neural_network(double **testing_inputs, double **expected, size_t size){
