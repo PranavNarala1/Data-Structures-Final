@@ -3,8 +3,8 @@
 #include "perceptron.h"
 
 typedef struct layer{
-    Perceptron *perceptrons;
-    int num_perceptrons;
+    Perceptron **perceptrons;
+    size_t num_perceptrons;
 } Layer;
 
 Layer create_layer(size_t num_perceptrons, ActivationFunction activation_function);

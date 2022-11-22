@@ -23,7 +23,7 @@ Perceptron *create_perceptron(ActivationFunction activation_function){
     new_perceptron->bias = rand() / RAND_MAX;
     for(size_t i = 0; i < new_perceptron->num_weights; ++i)
         new_perceptron->weights[i] = rand() / RAND_MAX;
-
+    return new_perceptron;
 }
 
 double get_output(Perceptron *perceptron, double *input){
@@ -45,11 +45,4 @@ double get_output(Perceptron *perceptron, double *input){
         return (exp(result) - exp(-1 * result))/ (exp(result) + exp(-1 * result));
     }
     return result;
-}
-
-void set_weight(Perceptron *perceptron, double value, size_t pos){
-    perceptron->weights[pos] = value;
-}
-void set_bias(Perceptron *perceptron, double value){
-    perceptron->bias = value;
 }
