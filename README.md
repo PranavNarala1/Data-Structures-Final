@@ -9,13 +9,13 @@ For our project, are planning on implementing an artificial neural network (ANN)
 
 Background Information Links:
 
-https://towardsdatascience.com/introduction-to-neural-networks-advantages-and-applications-96851bd1a207Links to an external site.
+https://towardsdatascience.com/introduction-to-neural-networks-advantages-and-applications-96851bd1a207
 
-https://www.analyticsvidhya.com/blog/2021/04/artificial-neural-network-its-inspiration-and-the-working-mechanism/Links to an external site.
+https://www.analyticsvidhya.com/blog/2021/04/artificial-neural-network-its-inspiration-and-the-working-mechanism/
 
-https://reader.elsevier.com/reader/sd/pii/B9780444636232000074?token=F2263E933FA36E7BEEF4F9AC3432341CEE78E404DE1549CB9F06E9A3A3D9AF44CE4D45F2CA5EC5FC566DD6DB0FE4B0F8&originRegion=us-east-1&originCreation=20221111045342Links to an external site.
+https://reader.elsevier.com/reader/sd/pii/B9780444636232000074?token=F2263E933FA36E7BEEF4F9AC3432341CEE78E404DE1549CB9F06E9A3A3D9AF44CE4D45F2CA5EC5FC566DD6DB0FE4B0F8&originRegion=us-east-1&originCreation=20221111045342
 
-https://dotnettutorials.net/lesson/how-artificial-neural-network-work/Links to an external site.
+https://dotnettutorials.net/lesson/how-artificial-neural-network-work/
 
 https://towardsdatascience.com/stochastic-gradient-descent-clearly-explained-53d239905d31
 
