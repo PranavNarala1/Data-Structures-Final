@@ -31,6 +31,8 @@ double *get_layer_output(Layer *layer, double *input){ //look for memory leaks
     double *output = malloc(sizeof(double) * layer->num_perceptrons);
     for(int i = 0; i < layer->num_perceptrons; ++i){
         output[i] = get_output(layer->perceptrons[i], input);
+        //printf("Perceptron Output: %f\n", output[i]);
+        //printf("Perceptron Weight 0: %f\n", layer->perceptrons[i]->weights[0]);
     } 
     
     return output;

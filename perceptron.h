@@ -26,16 +26,16 @@ Perceptron *create_perceptron(ActivationFunction activation_function, size_t num
     new_perceptron->activation_function = activation_function;
     double bias_sign = -1;
     if(rand() % 2 == 0){
-        bias_sign = 0;
+        bias_sign = 1;
     }
-    new_perceptron->bias = bias_sign * (rand() * 1.0) / RAND_MAX;
+    new_perceptron->bias = bias_sign * ((double) rand()) / (double) RAND_MAX;
     new_perceptron->weights = malloc(sizeof(double)*num_weights);
     for(size_t i = 0; i < num_weights; ++i){
         double weight_sign = -1;
         if(rand() % 2 == 0){
-            weight_sign = 0;
+            weight_sign = 1;
         }
-        new_perceptron->weights[i] = weight_sign * (rand() * 1.0) / RAND_MAX;
+        new_perceptron->weights[i] = weight_sign * ((double) rand()) / (double) RAND_MAX;
     }
     
     return new_perceptron;

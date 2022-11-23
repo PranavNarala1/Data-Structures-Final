@@ -35,17 +35,22 @@ double get_loss(double *prediction, double *expected, size_t size){
     double loss = 0;
     for(size_t i = 0; i < size; ++i){
         loss += (prediction[i] - expected[i]) * (prediction[i] - expected[i]);
-    }  
+    }
+    //printf("%f\n", prediction[0]);
     
     return loss / size;
 }
 double *forward_propagate(NeuralNetwork *neural_network, double *input){
-    double *current_values = input;
+    puts("got here");
+    double **layer_outputs = malloc(sizeof(double *) * (1 + neural_network->layers.length));
+    layer_outputs[0] = input;
+    //double *current_values = input;
     for(size_t i = 0; i < neural_network->layers.length; ++i){
-        current_values = get_layer_output(&(neural_network->layers.layers[i]), current_values);
+        layer_outputs[i + 1] = get_layer_output(&(neural_network->layers.layers[i]), layer_outputs[i]);
+        //current_values = get_layer_output(&(neural_network->layers.layers[i]), current_values);
     }
 
-    return current_values;
+    return layer_outputs[neural_network->layers.length];
 }
 
 double ***back_propagate_weights(NeuralNetwork *neural_network, double *input, double *expected){
@@ -97,7 +102,8 @@ double **back_propagate_biases(NeuralNetwork *neural_network, double *input, dou
 void train_neural_network(NeuralNetwork *neural_network, double **training_inputs, double **training_expected, double **validation_inputs, double **validation_expected, size_t training_size, size_t validation_size, size_t iterations, size_t mini_batch_size){
     //double ****weights_gradients = malloc((sizeof(double**) * neural_network->layers.length) * mini_batch_size);
     double ****weights_gradients = malloc(sizeof(double***) * mini_batch_size);
-    double ***bias_gradients = malloc((sizeof(double*) * neural_network->layers.length) * mini_batch_size);
+    //double ***bias_gradients = malloc((sizeof(double*) * neural_network->layers.length) * mini_batch_size);
+    double ***bias_gradients = malloc(sizeof(double**) * mini_batch_size);
     
     //do this for the amount of iterations there are
     for(size_t iteration = 0; iteration < iterations; ++iteration){
@@ -135,10 +141,12 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
             }
         }
 
+        
+
 
         test_neural_network(neural_network, validation_inputs, validation_expected, validation_size);
     }
-} //prints out accuracy after each evaluation_frequency iterations
+}
 
 void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs, double **expected, size_t size){
     double accuracy = 0;
@@ -149,6 +157,7 @@ void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs,
     loss = loss / size;
     printf("Average Loss: %f\n", loss);
 
+
     for(size_t i = 0; i < size; ++i){ //assuming there is one output where value >= 0.5 is one classification while the other classification is < 0.5.
         double *results = forward_propagate(neural_network, testing_inputs[i]);
         if(results[0] >= 0.5 && expected[i][0] == 1){
@@ -158,7 +167,7 @@ void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs,
         }
     }
     accuracy = (accuracy / size) * 100;
-    printf("Accuracy: %f\n", accuracy);
+    printf("Accuracy: %f\n", accuracy); //Accuracy of classification (if it is a classification model)
 }
 
 void print_model_architecture(NeuralNetwork *neural_network){
