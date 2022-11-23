@@ -33,8 +33,9 @@ NeuralNetwork *create_neural_network(ArrayList layers, size_t output_size, doubl
 }
 double get_loss(double *prediction, double *expected, size_t size){
     double loss = 0;
-    for(size_t i = 0; i < size; ++i)
+    for(size_t i = 0; i < size; ++i){
         loss += (prediction[i] - expected[i]) * (prediction[i] - expected[i]);
+    }  
     
     return loss / size;
 }
@@ -43,6 +44,7 @@ double *forward_propagate(NeuralNetwork *neural_network, double *input){
     for(size_t i = 0; i < neural_network->layers.length; ++i){
         current_values = get_layer_output(&(neural_network->layers.layers[i]), current_values);
     }
+
     return current_values;
 }
 

@@ -24,17 +24,28 @@ Perceptron *create_perceptron(ActivationFunction activation_function, size_t num
     Perceptron *new_perceptron = malloc(sizeof(Perceptron));
     new_perceptron->num_weights = num_weights;
     new_perceptron->activation_function = activation_function;
-    new_perceptron->bias = rand() / RAND_MAX;
-    for(size_t i = 0; i < new_perceptron->num_weights; ++i)
-        new_perceptron->weights[i] = rand() / RAND_MAX;
+    double bias_sign = -1;
+    if(rand() % 2 == 0){
+        bias_sign = 0;
+    }
+    new_perceptron->bias = bias_sign * (rand() * 1.0) / RAND_MAX;
+    new_perceptron->weights = malloc(sizeof(double)*num_weights);
+    for(size_t i = 0; i < num_weights; ++i){
+        double weight_sign = -1;
+        if(rand() % 2 == 0){
+            weight_sign = 0;
+        }
+        new_perceptron->weights[i] = weight_sign * (rand() * 1.0) / RAND_MAX;
+    }
     
     return new_perceptron;
 }
 
 double get_output(Perceptron *perceptron, double *input){
     double result = 0;
-    for(size_t i = 0; i < perceptron->num_weights; ++i)
+    for(size_t i = 0; i < perceptron->num_weights; ++i){
         result += input[i] * perceptron->weights[i];
+    }
     result += perceptron->bias;
 
     if(perceptron->activation_function == IDENTITY){
