@@ -14,13 +14,13 @@ typedef struct neural_network{ //Using mean squared error
 
 NeuralNetwork *create_neural_network(ArrayList layers, size_t output_size, double learning_rate);
 double get_loss(double *prediction, double *expected, size_t size);
-double *forward_propagate(double *input);
+double *forward_propagate(NeuralNetwork *neural_network, double *input);
 double ***back_propagate_weights(NeuralNetwork *neural_network, double *prediction, double *expected);
 double **back_propagate_biases(NeuralNetwork *neural_network, double *prediction, double *expected);
 void train_neural_network(NeuralNetwork *neural_network, double **training_inputs, double **training_expected, double **validation_inputs, double **validation_expected, size_t training_size, size_t validation_size, size_t iterations, size_t mini_batch_size);
-void test_neural_network(double **testing_inputs, double **expected, size_t size);
+void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs, double **expected, size_t size);
 void print_model_architecture(NeuralNetwork *neural_network);
-double **make_predictions(double **inputs, size_t size);
+double **make_predictions(NeuralNetwork *neural_network, double **inputs, size_t size);
 void destroy_neural_network(NeuralNetwork *neural_network);
 
 
@@ -38,10 +38,10 @@ double get_loss(double *prediction, double *expected, size_t size){
     
     return loss / size;
 }
-double *forward_propagate(double *input){
+double *forward_propagate(NeuralNetwork *neural_network, double *input){
     double *current_values = input;
-    for(size_t i = 0; i < layers.length; ++i){
-        current_values = get_layer_output(&layers.layers[i], current_values);
+    for(size_t i = 0; i < neural_network->layers.length; ++i){
+        current_values = get_layer_output(&(neural_network->layers.layers[i]), current_values);
     }
     return current_values;
 }
@@ -51,8 +51,8 @@ double ***back_propagate_weights(NeuralNetwork *neural_network, double *predicti
     for(size_t layer = 0; layer < neural_network->layers.length; ++layer){
         double **layer_gradient = malloc(sizeof(double*) * neural_network->layers.layers[layer].num_perceptrons);
         for(size_t perceptron = 0; perceptron < neural_network->layers.layers[layer].num_perceptrons; ++perceptron){
-            double *perceptron_gradient = malloc(sizeof(double) * neural_network->layers.layers[layer].perceptrons[perceptron].num_weights);
-            for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron].num_weights; ++current_weight){
+            double *perceptron_gradient = malloc(sizeof(double) * neural_network->layers.layers[layer].perceptrons[perceptron]->num_weights);
+            for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron]->num_weights; ++current_weight){
                 double current_loss = get_loss(prediction, expected, neural_network->output_size);
                 neural_network->layers.layers[layer].perceptrons[perceptron]->weights[current_weight] += 0.05;
                 double new_loss = get_loss(prediction, expected, neural_network->output_size);
@@ -96,19 +96,19 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
 
         for(size_t i = 0; i < mini_batch_size; ++i){
             size_t row_to_use = rand() % training_size;
-            weights_gradients[i] = back_propagate_weights(neural_network, forward_propagate(training_inputs[row_to_use]), training_expected[row_to_use]);
-            bias_gradients[i] = back_propagate_biases(neural_network, forward_propagate(training_inputs[row_to_use]), training_expected[row_to_use]);
+            weights_gradients[i] = back_propagate_weights(neural_network, forward_propagate(neural_network, training_inputs[row_to_use]), training_expected[row_to_use]);
+            bias_gradients[i] = back_propagate_biases(neural_network, forward_propagate(neural_network, training_inputs[row_to_use]), training_expected[row_to_use]);
         }
 
         for(size_t layer = 0; layer < neural_network->layers.length; ++layer){
             for(size_t perceptron = 0; perceptron < neural_network->layers.layers[layer].num_perceptrons; ++perceptron){
-                for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron].num_weights; ++current_weight){
+                for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer].perceptrons[perceptron]->num_weights; ++current_weight){
                     double average = 0;
                     for(size_t i = 0; i < mini_batch_size; ++i){
                         average += weights_gradients[i][layer][perceptron][current_weight];
                     }
                     average /= mini_batch_size;
-                    neural_network->layers.layers[layer].perceptrons[perceptron]->weights[current_weight] -= learning_rate * average;
+                    neural_network->layers.layers[layer].perceptrons[perceptron]->weights[current_weight] -= neural_network->learning_rate * average;
 
                 }
             }
@@ -121,26 +121,26 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
                         average += bias_gradients[i][layer][perceptron];
                     }
                     average /= mini_batch_size;
-                    neural_network->layers.layers[layer].perceptrons[perceptron]->bias -= learning_rate * average;
+                    neural_network->layers.layers[layer].perceptrons[perceptron]->bias -= neural_network->learning_rate * average;
             }
         }
 
 
-        test_neural_network(validation_inputs, validation_expected, validation_size);
+        test_neural_network(neural_network, validation_inputs, validation_expected, validation_size);
     }
 } //prints out accuracy after each evaluation_frequency iterations
 
-void test_neural_network(double **testing_inputs, double **expected, size_t size){
+void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs, double **expected, size_t size){
     double accuracy = 0;
     double loss = 0;
     for(size_t i = 0; i < size; ++i){
-        loss += get_loss(forward_propagate(testing_inputs[i]), expected[i], size);
+        loss += get_loss(forward_propagate(neural_network, testing_inputs[i]), expected[i], size);
     }
     loss = loss / size;
-    printf("Average Loss: %d\n", loss);
+    printf("Average Loss: %f\n", loss);
 
     for(size_t i = 0; i < size; ++i){ //assuming there is one output where value >= 0.5 is one classification while the other classification is < 0.5.
-        results = forward_propagate(testing_inputs[i]);
+        double *results = forward_propagate(neural_network, testing_inputs[i]);
         if(results[0] >= 0.5 && expected[i][0] == 1){
             accuracy += 1;
         } else if(results[0] < 0.5 && expected[i][0] == 0){
@@ -148,18 +148,18 @@ void test_neural_network(double **testing_inputs, double **expected, size_t size
         }
     }
     accuracy = (accuracy / size) * 100;
-    printf("Accuracy: %d\n", accuracy);
+    printf("Accuracy: %f\n", accuracy);
 }
 
 void print_model_architecture(NeuralNetwork *neural_network){
     for(size_t i = 0; i < neural_network->layers.length; ++i){
-        print_layer(&neural_network->layers->layers[i]);
+        print_layer(&(neural_network->layers.layers[i]));
     }
 }
-double **make_predictions(double **inputs, size_t size){
+double **make_predictions(NeuralNetwork *neural_network, double **inputs, size_t size){
     double **results = malloc(sizeof(double *) * size);
     for(size_t i = 0; i < size; ++i){
-        results[i] = forward_propagate(inputs[i]);
+        results[i] = forward_propagate(neural_network, inputs[i]);
     }
     return results;
 }
