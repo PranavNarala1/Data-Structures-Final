@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     Layer *layer3Ptr = create_layer(1, sigmoid, 10);
     append_al (layer3Ptr, arrayListPtr);
 
-    NeuralNetwork *neural_network = create_neural_network(*arrayListPtr, 1, 0.1);
+    NeuralNetwork *neural_network = create_neural_network(*arrayListPtr, 1, 0.01);
 
     /*double *test_input = malloc(sizeof(double)*5);
     test_input[0] = 1;
