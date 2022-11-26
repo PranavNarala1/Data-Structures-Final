@@ -18,11 +18,11 @@ int main(int argc, char *argv[]) {
 
     
 
-    Layer *layer1Ptr = create_layer(20, identity, 2);
+    Layer *layer1Ptr = create_layer(20, relu, 2);
     
     append_al (layer1Ptr, arrayListPtr);
 
-    Layer *layer2Ptr = create_layer(5, identity, 20);
+    Layer *layer2Ptr = create_layer(5, relu, 20);
     append_al (layer2Ptr, arrayListPtr);
 
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
 
 
-    train_neural_network(neural_network, training_inputs, training_expected, training_inputs, training_expected, 100, 100, 100, 1);
+    train_neural_network(neural_network, training_inputs, training_expected, training_inputs, training_expected, 100, 100, 100, 100);
 
 
     double **new_results = make_predictions(neural_network, &inputs, 1);

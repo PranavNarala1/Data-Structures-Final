@@ -33,7 +33,7 @@ NeuralNetwork *create_neural_network(ArrayList layers, size_t output_size, doubl
 }
 double get_loss(double *prediction, double *expected, size_t size){ //issue with size being 2000
     double loss = 0;
-    printf("size: %d\n", size);
+    //printf("size: %d\n", size);
     for(size_t i = 0; i < size; ++i){
         loss += (prediction[i] - expected[i]) * (prediction[i] - expected[i]);
     }
@@ -52,7 +52,7 @@ double *forward_propagate(NeuralNetwork *neural_network, double *input){
     for(size_t i = 0; i < neural_network->layers.length; ++i){
         layer_outputs[i + 1] = (double *) calloc(neural_network->layers.layers[i]->num_perceptrons, sizeof(double));
         
-        //printf("Layer Output %d:\n", i);
+        //printf("Layer Output %d: %f\n", i, get_layer_output(neural_network->layers.layers[i], layer_outputs[i])[0]);
         //double *result = get_layer_output((neural_network->layers.layers[i]), layer_outputs[i]);
         //for(int j = 0; j < neural_network->layers.layers[i]->num_perceptrons; ++j){
         //    printf("%f, ", result[j]);
@@ -77,13 +77,14 @@ double ***back_propagate_weights(NeuralNetwork *neural_network, double *input, d
                 double *prediction = forward_propagate(neural_network, input);
                 //puts("got here 4");
                 double current_loss = get_loss(prediction, expected, neural_network->output_size);
-                neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] += 0.01;
+                neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] += 0.5;
                 double *new_prediction = forward_propagate(neural_network, input);
                 double new_loss = get_loss(new_prediction, expected, neural_network->output_size); //prediction value is wrong
                 //puts("got here 5");
-                double partial_derivative = (new_loss - current_loss) / 0.01;
+                double partial_derivative = (new_loss - current_loss) / 0.5;
                 //printf("Derivative: %f \n", partial_derivative);
-                neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] -= 0.01;
+                neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] -= 0.5;
+                //printf("Changing layer %d %f %f %f %f\n", layer, prediction[0], new_prediction[0], expected[0], current_loss);
                 perceptron_gradient[current_weight] = partial_derivative;
             }
             layer_gradient[perceptron] = perceptron_gradient;
@@ -102,11 +103,11 @@ double **back_propagate_biases(NeuralNetwork *neural_network, double *input, dou
             double bias_gradient = 0;
             double *prediction = forward_propagate(neural_network, input);
             double current_loss = get_loss(prediction, expected, neural_network->output_size);
-            neural_network->layers.layers[layer]->perceptrons[perceptron]->bias += 0.01;
+            neural_network->layers.layers[layer]->perceptrons[perceptron]->bias += 0.5;
             double *new_prediction = forward_propagate(neural_network, input);
             double new_loss = get_loss(new_prediction, expected, neural_network->output_size);
-            double partial_derivative = (new_loss - current_loss) / 0.01;
-            neural_network->layers.layers[layer]->perceptrons[perceptron]->bias -= 0.01;
+            double partial_derivative = (new_loss - current_loss) / 0.5;
+            neural_network->layers.layers[layer]->perceptrons[perceptron]->bias -= 0.5;
             layer_gradient[perceptron] = partial_derivative;
         }
         bias_gradient[layer] = layer_gradient;
@@ -180,6 +181,10 @@ void test_neural_network(NeuralNetwork *neural_network, double **testing_inputs,
 
     for(size_t i = 0; i < size; ++i){ //assuming there is one output where value >= 0.5 is one classification while the other classification is < 0.5.
         double *results = forward_propagate(neural_network, testing_inputs[i]);
+        //printf("Output: %f\n", testing_inputs[i][1]);
+        //if(expected[i][0] == 0.0){
+        //    puts("Reached 0");
+        //}
         if(results[0] >= 0.5 && expected[i][0] == 1.0){
             accuracy += 1;
         } else if(results[0] < 0.5 && expected[i][0] == 0.0){

@@ -56,7 +56,8 @@ double get_output(Perceptron *perceptron, double *input){
         else
             return result;
     } else if(perceptron->activation_function == SIGMOID){
-        return 1 / (1 + exp(-1 * result));
+        //printf("Sigmoid Output: %d\n", 1.0 / (1 + exp(-1 * result)));
+        return 1.0 / (1 + exp(-1 * result));
     } else if(perceptron->activation_function == TANH){
         return (exp(result) - exp(-1 * result))/ (exp(result) + exp(-1 * result));
     }

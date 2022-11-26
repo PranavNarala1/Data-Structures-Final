@@ -71,11 +71,11 @@ int main(int argc, char *argv[])
 
     
 
-    Layer *layer1Ptr = create_layer(20, relu, 5);
+    Layer *layer1Ptr = create_layer(20, identity, 5);
     
     append_al (layer1Ptr, arrayListPtr);
 
-    Layer *layer2Ptr = create_layer(10, relu, 20);
+    Layer *layer2Ptr = create_layer(10, sigmoid, 20);
     append_al (layer2Ptr, arrayListPtr);
 
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     double *result = forward_propagate(neural_network, test_input);
     printf("Result: %f\n", result[0]);*/
 
-    train_neural_network(neural_network, inputData, inputLabels, inputData, inputLabels, 10000, 10000, 2, 50);
+    train_neural_network(neural_network, inputData, inputLabels, inputData, inputLabels, 10000, 10000, 1000, 500);
 
 
     return 0;
