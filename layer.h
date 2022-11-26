@@ -15,10 +15,10 @@ Perceptron *get_perceptrons(Layer *layer);
 void print_layer(Layer *layer); // print out layer information
 
 Layer *create_layer(size_t num_perceptrons, ActivationFunction activation_function, size_t num_weights){
-    Layer *new_layer = malloc(sizeof(Layer));
+    Layer *new_layer = (Layer *) malloc(sizeof(Layer));
     new_layer->num_perceptrons = num_perceptrons;
     new_layer->activation_function = activation_function;
-    new_layer->perceptrons = malloc(sizeof(Perceptron *) * num_perceptrons);
+    new_layer->perceptrons = (Perceptron **) calloc(num_perceptrons, sizeof(Perceptron *));
     for(size_t i = 0; i < num_perceptrons; ++i){
         new_layer->perceptrons[i] = create_perceptron(activation_function, num_weights);
     }
@@ -28,7 +28,7 @@ Layer *create_layer(size_t num_perceptrons, ActivationFunction activation_functi
 }
 
 double *get_layer_output(Layer *layer, double *input){ //look for memory leaks
-    double *output = malloc(sizeof(double) * layer->num_perceptrons);
+    double *output = (double *) calloc(layer->num_perceptrons, sizeof(double));
     for(int i = 0; i < layer->num_perceptrons; ++i){
         output[i] = get_output(layer->perceptrons[i], input);
         //printf("Perceptron Output: %f\n", output[i]);

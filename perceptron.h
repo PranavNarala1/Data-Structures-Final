@@ -21,7 +21,7 @@ double get_output(Perceptron *perceptron, double *input);
 
 //Allocates space for a perceptron, randomly initializes its weights and biases, and returns it.
 Perceptron *create_perceptron(ActivationFunction activation_function, size_t num_weights){
-    Perceptron *new_perceptron = malloc(sizeof(Perceptron));
+    Perceptron *new_perceptron = (Perceptron *) malloc(sizeof(Perceptron));
     new_perceptron->num_weights = num_weights;
     new_perceptron->activation_function = activation_function;
     double bias_sign = -1;
@@ -29,7 +29,7 @@ Perceptron *create_perceptron(ActivationFunction activation_function, size_t num
         bias_sign = 1;
     }
     new_perceptron->bias = bias_sign * ((double) rand()) / (double) RAND_MAX;
-    new_perceptron->weights = malloc(sizeof(double)*num_weights);
+    new_perceptron->weights = (double *) calloc(num_weights, sizeof(double));
     for(size_t i = 0; i < num_weights; ++i){
         double weight_sign = -1;
         if(rand() % 2 == 0){
