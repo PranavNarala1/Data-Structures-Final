@@ -1,0 +1,63 @@
+Space-Time Complexity Analysis of our Neural Network:
+
+
+Let N be the total number of perceptrons in a network. Let the number of perceptrons in each layer of the model be represented as N1, N2, .... NM if M is the number of layers in the network.
+
+
+Time Complexity:
+
+
+The time complexity of the model for different operations will be described in terms of how many perceptron input-to-output operations need to occur.
+
+
+1. Forward propagation for one input case.
+When forward propagation is performed on one input case, meaning the model is making a single prediction for a case, the data will be fed into each perceptron on the first layer. Then, the output of this layer will be taken and fed as input into each perceptron on the next layer. This process repeats until the output of the last layer is taken.
+
+
+Then, the time complexity of forward propagation can be described as:
+T(N) = O(N1 + N2 + .... + NM)
+
+This can be simplified to T(N) = O(N)
+
+2. Back propagation for weights for one input case.
+Let W be the number of weights in a perceptron. Since the number of weights for each perceptron in a layer is the same, the number of perceptron weights for each layer can be described as W1, W2, ..., WN.
+
+When back propagation for weights occurs, a forward propagation needs to occur as every weight is changed. Therefore, the time complexity of weight back propagation is the time complexity of forward propagation * the total number of weights in the model, which is W1 * N1 + W2 * N2 + ... + WM * NM.
+
+Then, the time complexity of weights back propagation can be described as:
+T(N) = O((N1 + N2 + .... + NM) * (W1 * N1 + W2 * N2 + ... + WM * NM))
+
+This simplifies to O((N) * (N)) = O(N^2)
+
+2. Back propagation for biases for one input case.
+
+When back propagation occurs for biases, a forward propagation needs to occur for every time the bias value is changed. Therefore, the time complexity of bias back propagation is the time complexity of forward propagation * the total number of biases in the model, which is N1 + N2 + ... + NM.
+
+Then, the time complexity of bias back propagation can be described as:
+T(N) = O((N1 + N2 + .... + NM) * (N1 + N2 + ... + NM))
+
+This simplifies to O((N) * (N)) = O(N^2)
+
+3. Training the model
+
+To train a network, back propagation needs to occur the mini batch size * iterations amount of times. Since this value is a constant, the time complexity of training the model can be described as:
+
+T(N) = O(N^2)
+
+4. Testing the model
+
+When testing the model, forward propagation is called for every testing example. There are a constant amount of testing examples, so the time complexity of testing the model can be described as:
+
+T(N) = O(N)
+
+
+Space Complexity:
+
+
+The space complexity of the model for different operations will be described in terms of how many perceptrons need to be stored.
+
+Let N be the number of perceptrons in a layer. Let the number of perceptrons in each layer of the model be represented as N1, N2, .... NM if M is the number of layers in the network.
+Then, the space complexity of the model can be described as:
+S(N) = O(N1 + N2 + .... + NM)
+
+This simplifies to S(N) = O(N)

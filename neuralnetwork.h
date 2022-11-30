@@ -75,12 +75,10 @@ double ***back_propagate_weights(NeuralNetwork *neural_network, double *input, d
             double *perceptron_gradient = (double *) calloc(neural_network->layers.layers[layer]->perceptrons[perceptron]->num_weights, sizeof(double));
             for(size_t current_weight = 0; current_weight < neural_network->layers.layers[layer]->perceptrons[perceptron]->num_weights; ++current_weight){
                 double *prediction = forward_propagate(neural_network, input);
-                //puts("got here 4");
                 double current_loss = get_loss(prediction, expected, neural_network->output_size);
                 neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] += 0.5;
                 double *new_prediction = forward_propagate(neural_network, input);
-                double new_loss = get_loss(new_prediction, expected, neural_network->output_size); //prediction value is wrong
-                //puts("got here 5");
+                double new_loss = get_loss(new_prediction, expected, neural_network->output_size);
                 double partial_derivative = (new_loss - current_loss) / 0.5;
                 //printf("Derivative: %f \n", partial_derivative);
                 neural_network->layers.layers[layer]->perceptrons[perceptron]->weights[current_weight] -= 0.5;
@@ -127,8 +125,6 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
     //do this for the amount of iterations there are
     for(size_t iteration = 0; iteration < iterations; ++iteration){
 
-        //puts("got here 1");
-
         for(size_t i = 0; i < mini_batch_size; ++i){
             size_t row_to_use = rand() % training_size;
             weights_gradients[i] = back_propagate_weights(neural_network, training_inputs[row_to_use], training_expected[row_to_use]);
@@ -161,9 +157,6 @@ void train_neural_network(NeuralNetwork *neural_network, double **training_input
             }
         }
 
-        
-
-        //puts("got here 2");
         test_neural_network(neural_network, validation_inputs, validation_expected, validation_size);
         
     }
