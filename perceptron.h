@@ -16,6 +16,8 @@ typedef struct perceptron{
     ActivationFunction activation_function;
 } Perceptron;
 
+
+void delete_perceptron(Perceptron *perceptron);
 Perceptron *create_perceptron(ActivationFunction activation_function, size_t num_weights);
 double get_output(Perceptron *perceptron, double *input);
 
@@ -62,4 +64,9 @@ double get_output(Perceptron *perceptron, double *input){
         return (exp(result) - exp(-1 * result))/ (exp(result) + exp(-1 * result));
     }
     return result;
+}
+
+void delete_perceptron(Perceptron *perceptron) {
+    free(perceptron->weights);
+    free(perceptron);
 }
