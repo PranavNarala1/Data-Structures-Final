@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 
     double **inputLabels = (double **)calloc(10000, sizeof(double *));
     double **inputData = (double **)calloc(10000, sizeof(double *));
-    // todo split into training
 
     FILE *stream = fopen("data/citrus.csv", "r");
 
