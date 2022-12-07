@@ -81,11 +81,11 @@ int main(int argc, char *argv[])
     ActivationFunction sigmoid = SIGMOID;
     ActivationFunction identity = IDENTITY;
 
-    Layer *layer1Ptr = create_layer(30, identity, 5);
+    Layer *layer1Ptr = create_layer(20, identity, 5);
 
     append_al(layer1Ptr, arrayListPtr);
 
-    Layer *layer2Ptr = create_layer(10, sigmoid, 30);
+    Layer *layer2Ptr = create_layer(10, sigmoid, 20);
     append_al(layer2Ptr, arrayListPtr);
 
     Layer *layer3Ptr = create_layer(1, sigmoid, 10);
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
     NeuralNetwork *neural_network = create_neural_network(*arrayListPtr, 1, 0.05);
 
-    train_neural_network(neural_network, trainingData, trainingLabels, validationData, validationLabels, 8000, 1000, 100, 500);
+    train_neural_network(neural_network, trainingData, trainingLabels, validationData, validationLabels, 8000, 1000, 50, 500);
 
     test_neural_network(neural_network, testingData, testingLabels, 1000);
 

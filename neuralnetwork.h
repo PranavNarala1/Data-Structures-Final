@@ -228,7 +228,6 @@ double **make_predictions(NeuralNetwork *neural_network, double **inputs, size_t
 
 void destroy_neural_network(NeuralNetwork *neural_network)
 {
-    printf("Memory address : NEURAL NETWORK %p\n", neural_network);
     destroy_al(&(neural_network->layers));
     free(neural_network);
 }
