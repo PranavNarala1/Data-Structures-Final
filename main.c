@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
     NeuralNetwork *neural_network = create_neural_network(*arrayListPtr, 1, 0.05);
 
-    train_neural_network(neural_network, trainingData, trainingLabels, validationData, validationLabels, 8000, 1000, 50, 500);
+    train_neural_network(neural_network, trainingData, trainingLabels, validationData, validationLabels, 8000, 1000, 20, 250);
 
     test_neural_network(neural_network, testingData, testingLabels, 1000);
 
