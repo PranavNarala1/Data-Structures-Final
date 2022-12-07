@@ -64,7 +64,7 @@ T(N) = O(N^2)
 
 When testing the model, forward propagation is called for every testing example. There 
 are a constant amount of testing examples, so the time complexity of testing the model 
-can be described as:
+can be described as a single forward propagation, or:
 
 T(N) = O(N)
 
@@ -83,3 +83,25 @@ Then, the space complexity of the model can be described as:
 S(N) = O(N1 + N2 + .... + NM)
 
 This simplifies to S(N) = O(N).
+
+
+Space complexity in terms of an array A:
+
+Let A represent an array. Since each perceptron only has on bias, which is a constant value of 1, it will not be included in this big-O notation.
+
+Each perceptron has an array of weights A. Each layer has an array of perceptron, so there are A*A arrays. Each network has an array of layers, so there are A*A*A arrays.
+
+This means the space complexity of storing a neural network in terms of arrays, A, can be described as:
+
+S(A) = O(A^3)
+
+For back propagation, each back propagation on a single example requirs creating a weights gradient with dimensionality A^3 since there is a weight gradient 1-D array for each perceptron, a 2-D array containing those 1-D arrays for each perceptron in the layer, and a 3-D array containing those 2-D layer gradients. The bias gradients array is A^2, which has a lower degree than A^3, so it will be simplified out.
+
+Therefore, the space complexity of back propagation can be described as:
+S(A) = O(A^3)
+
+Back propagation stores an array of these gradients for each example in the mini-batch, making it a 4-D array. Since this is created a constant amount of times, which is the amount of iterations, that constant can be simplified out.
+
+Therefore, the training space complexity can be described as:
+
+S(A) = O(A^4)
